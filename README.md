@@ -112,6 +112,7 @@ This is going to contain all the public resources that we'll be needing, basical
 It has the main file index.html
 
 ### __tests__
+-----------------
 This is where we will be defining our test cases and write them accordingly.
 
 For starting up with the project, the following dependencies needs to be met:

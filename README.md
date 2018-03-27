@@ -25,42 +25,42 @@
 │   │  	├── admin
 │   │   │   ├── bills
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── customers
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── orders
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── rates
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── stats
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   ├── app
 │   │   │   ├── login  
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── about
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   ├── customer
 │   │   │   ├── bills
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── customers
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── orders
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── placeOrders
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   │   │   ├── stats
 │   │   │   │	├── index.js
-│	│	│	│	├── style.css
+│   │   │   │	├── style.css
 │   ├── utils
 │   │	├── dateUtil.js
 │   │	├── errorHandler.js

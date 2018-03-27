@@ -3,7 +3,6 @@
 ## Folder Structure
 -----------------------------------
 ```
-├── README.md
 ├── app
 │   ├── components
 │   │   ├── Header

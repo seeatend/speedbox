@@ -141,7 +141,7 @@ The above should run the app in production mode on a port 3004.
 While contributing to the project the following points needs to kept in mind:
 
  1. Create a branch named after the feature that you are currently developing, so if you are adding authentication system then you should create a branch named `authentication` or whatever suits best for you. You can use the command `git checkout -b "feature_<branch_name>_<your_firstname>"` this should create the new branch and also switch it over to your one.
- If your fixing a bug the branch should have name like- `git checkout -b "fix<branch_name>_<your_firstname>"`
+ If you'r fixing a bug the branch should have name like- `git checkout -b "fix_<branch_name>_<your_firstname>"`
  2. Always pull in the latest code before developing in order to avoid merge conflicts. Merge conflicts should be avoided as much as possible.
  3. After developing your feature please create a pull request, describing in brief what all changes has been made for that particular pull request.
  4. **DO NOT MERGE THE CODE TO MASTER OR TEST BRANCH**. One should not merge the code to master branch without the code being reviewed and tested properly. The code should be merged only after code has been reviewed thoroughly by everyone and the merge should be done by the project moderators.

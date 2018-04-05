@@ -123,7 +123,8 @@ The following steps needs to be followed in order to start the server:
 
  1. Clone the repository
  2. Navigate into the project directory
- 3. Use the command `npm start`
+ 3. Use command `npm install` to install the node dependencies. 
+ 4. Use the command `npm start`
 
 Upon successful starting one should see the following message up in the console at last line:
 ```

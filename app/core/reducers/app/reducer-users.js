@@ -30,6 +30,7 @@ export default (state = initialState, action) => {
         loading: false,
         loaded: true
       };
+      document.cookie = `token=${state.token}`;
 
       return state;
       break;

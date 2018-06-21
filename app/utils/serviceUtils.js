@@ -2,20 +2,18 @@
 import axios from 'axios';
 
 const CONFIGS = {
-  "APP_LOGIN_REDIRECT_URL": "/login",
-  "SERVICE_URL_PREFIX": "http://localhost:3003/speedbox/api/v1",
+  APP_LOGIN_REDIRECT_URL: '/login',
+  SERVICE_URL_PREFIX: 'http://localhost:3003/speedbox/api/v1',
 };
 
 const oConfigHeaders = {
-  "Content-Type": "application/json",
+  'Content-Type': 'application/json',
   crossDomain: true,
   credentials: 'same-origin',
 };
 
 function getCookieByName(name) {
-  const matches = document.cookie.match(
-    new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'),
-  );
+  const matches = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
@@ -24,19 +22,19 @@ function getCookie() {
 }
 
 module.exports = {
-  addUser: function (serviceURI, actionType, fnSuccess, fnError) {
-    console.log('called till service util---')
+  addUser: function(serviceURI, actionType, fnSuccess, fnError) {
+    console.log('called till service util---');
     setTimeout(() => {
       console.log('in set time out');
       fnSuccess({
         text: 'from UTILS',
-        title: 'from UTILS OK'
-      })
-    }, 1000)
+        title: 'from UTILS OK',
+      });
+    }, 1000);
   },
 
-  doLogin: function (serviceURI, dataToPost, fnSuccess, fnError) {
-    console.log('called till service util---')
+  doLogin: function(serviceURI, dataToPost, fnSuccess, fnError) {
+    console.log('called till service util---');
     // setTimeout(() => {
     //   console.log('in set time out');
     //   fnSuccess({
@@ -48,36 +46,43 @@ module.exports = {
     dataToPost.token = getCookie();
     dataToPost.loginType = 'admin';
     axios({
-        url: `${CONFIGS.SERVICE_URL_PREFIX}${serviceURI}`,
-        method: 'post',
-        data: dataToPost,
-        headers: oConfigHeaders,
-        credentials: 'same-origin',
-      })
-      .then(function (response) {
+      url: `${CONFIGS.SERVICE_URL_PREFIX}${serviceURI}`,
+      method: 'post',
+      data: dataToPost,
+      headers: oConfigHeaders,
+      credentials: 'same-origin',
+    })
+      .then(response => {
         console.log(response.data);
         fnSuccess(response.data);
       })
-      .catch(function (error) {
+      .catch(error => {
         fnError(error);
         console.log(error);
       });
   },
 
-  getDataFromService: function (serviceURI, params, fnSuccess, fnError) {
-    axios({
+  getDataFromService: function(serviceURI, params, fnSuccess, fnError) {
+    if (serviceURI === '/admin/orders') {
+      console.log('ajkasjkjkas ')
+      setTimeout(() => {
+        fnSuccess();
+      }, 3000);
+    } else {
+      axios({
         url: `${CONFIGS.SERVICE_URL_PREFIX}${serviceURI}?token=${getCookie()}`,
         method: 'get',
         data: params,
-        headers: oConfigHeaders
+        headers: oConfigHeaders,
       })
-      .then(function (response) {
-        console.log(response.data);
-        fnSuccess(response.data);
-      })
-      .catch(function (error) {
-        fnError(error);
-        console.log(error);
-      });
-  }
-}
+        .then(response => {
+          console.log(response.data);
+          fnSuccess(response.data);
+        })
+        .catch(error => {
+          fnError(error);
+          console.log(error);
+        });
+    }
+  },
+};

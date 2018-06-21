@@ -1,9 +1,9 @@
-import React from "react";
-import { render } from "react-dom";
-import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-dom"
+import React from 'react';
+import { render } from 'react-dom';
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import injectTapEventPlugin from "react-tap-event-plugin";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 /* ------------Material UI classes-----------*/
 import { createMuiTheme } from 'material-ui/styles/';
@@ -14,7 +14,7 @@ import red from 'material-ui/colors/red';
 import store from './core/store';
 import Routes from './routes';
 import Login from './pages/app/login/';
-import AdminLayout from './pages/admin/'
+import AdminLayout from './pages/admin/';
 
 injectTapEventPlugin();
 
@@ -32,21 +32,18 @@ const muiTheme = createMuiTheme({
   },
 });
 
-
 const IndexRoutes = (
-      <Switch>
-        <Route key="login" exact path="/login" component={Login} />
-        <Route key="seller_main" path="/" component={AdminLayout}/>
-     </Switch>
-  )
+  <Switch>
+    <Route key="login" exact path="/login" component={Login} />
+    <Route key="seller_main" path="/" component={AdminLayout} />
+  </Switch>
+);
 
 render(
   <Provider store={store}>
     <MuiThemeProvider muiTheme={muiTheme}>
-      <Router>
-        {IndexRoutes}
-     </Router>
+      <Router>{IndexRoutes}</Router>
     </MuiThemeProvider>
-  </Provider> ,
-  document.getElementById("root")
+  </Provider>,
+  document.getElementById('root'),
 );

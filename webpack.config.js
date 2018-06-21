@@ -14,7 +14,7 @@ const config = {
       test: /.jsx?$/,
       exclude: [
         path.resolve(__dirname, "node_modules"),
-        path.resolve(__dirname, "app/constants"),
+        // path.resolve(__dirname, "app/constants"),
       ],
       loader: "babel-loader",
       query: {

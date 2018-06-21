@@ -1,16 +1,23 @@
 const ServiceUtil = require('../../../../utils/serviceUtils');
+const dummyOrders = require('./dummyData');
 
 export function getOrders(params) {
-  // console.log('In Action---', data)
   return {
-    type: "ADMIN_GET_ORDERS",
+    type: 'ADMIN_GET_ORDERS',
     payload: new Promise((resolve, reject) => {
-      ServiceUtil.getDataFromService('/admin/orders', params, function (resolvedData) {
-        resolve(resolvedData);
-      }, function (failedData) {
-        reject(failedData);
-      })
-    })
+      ServiceUtil.getDataFromService(
+        '/admin/orders',
+        params,
+        function(resolvedData) {
+          // console.log('dummyOrders-- ', dummyOrders.order);
+          resolve({
+            data: dummyOrders.order,
+          });
+        },
+        function(failedData) {
+          reject(failedData);
+        },
+      );
+    }),
   };
 }
-

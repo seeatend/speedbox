@@ -278,11 +278,11 @@ class OrdersTable extends React.Component {
                     <TableCell padding="checkbox">
                       <Checkbox checked={isSelected} />
                     </TableCell>
-                    <TableCell padding="none">{n.TransactionID}</TableCell>
-                    <TableCell numeric>{`${n.PickupAddress.City}, ${n.PickupAddress.Country}`}</TableCell>
-                    <TableCell numeric>{n.PickupAddress.Name}</TableCell>
-                    <TableCell numeric>{n.Weight}</TableCell>
-                    <TableCell numeric>{`${n.DeliveryAddress.City}, ${n.DeliveryAddress.Country}`}</TableCell>
+                    <TableCell padding="none">{n.orderNumber}</TableCell>
+                    <TableCell numeric>{`${n._source.city}, ${n._source.country}`}</TableCell>
+                    <TableCell numeric>{n._source.name}</TableCell>
+                    <TableCell numeric>{n.weight || '-'}</TableCell>
+                    <TableCell numeric>{`${n._destination.city}, ${n._destination.country}`}</TableCell>
                   </TableRow>
                 );
               })}

@@ -1,6 +1,7 @@
 const order = [
    {
       orderNumber: 'MUM1505203289',
+      status: 'unprocessed',
       _source: {
          name: 'Dr. Vaidya',
          city: 'Mumbai',
@@ -10,10 +11,14 @@ const order = [
          name: 'Dr. Vaidya',
          city: 'New York, USA',
       },
+      _package: {
+        codAmount: 300
+      },
       weight: 8,
    },
    {
       orderNumber: 'PUN1505203111',
+      status: 'unprocessed',
       _source: {
          name: 'Ram Mahajan',
          city: 'Pune',
@@ -24,10 +29,14 @@ const order = [
          name: 'Dr. Vaidya',
          city: 'Washington, USA',
       },
+      _package: {
+        codAmount: 300
+      },
       weight: 10,
    },
    {
       orderNumber: 'BAN1505203344',
+      status: 'unprocessed',
       _source: {
          name: 'Dr. Vaidya',
          city: 'Bangalore',
@@ -38,9 +47,13 @@ const order = [
          city: 'Kolkata, India',
       },
       weight: 10,
+      _package: {
+        codAmount: 300
+      },
    },
    {
       orderNumber: 'MUM1505203289',
+      status: 'unprocessed',
       _source: {
          name: 'Dr. Vaidya',
          city: 'Mumbai',
@@ -50,10 +63,14 @@ const order = [
          name: 'Dr. Vaidya',
          city: 'New York, USA',
       },
+      _package: {
+        codAmount: 300
+      },
       weight: 8,
    },
    {
       orderNumber: 'PUN1505203111',
+      status: 'unprocessed',
       _source: {
          name: 'Ram Mahajan',
          city: 'Pune',
@@ -64,10 +81,14 @@ const order = [
          name: 'Dr. Vaidya',
          city: 'Washington, USA',
       },
+      _package: {
+        codAmount: 300
+      },
       weight: 10,
    },
    {
       orderNumber: 'BAN1505203344',
+      status: 'unprocessed',
       _source: {
          name: 'Dr. Vaidya',
          city: 'Bangalore',
@@ -78,9 +99,13 @@ const order = [
          city: 'Kolkata, India',
       },
       weight: 10,
+      _package: {
+        codAmount: 300
+      },
    },
    {
       orderNumber: 'MUM1505203289',
+      status: 'unprocessed',
       _source: {
          name: 'Dr. Vaidya',
          city: 'Mumbai',
@@ -90,10 +115,14 @@ const order = [
          name: 'Dr. Vaidya',
          city: 'New York, USA',
       },
+      _package: {
+        codAmount: 300
+      },
       weight: 8,
    },
    {
       orderNumber: 'PUN1505203111',
+      status: 'unprocessed',
       _source: {
          name: 'Ram Mahajan',
          city: 'Pune',
@@ -104,10 +133,14 @@ const order = [
          name: 'Dr. Vaidya',
          city: 'Washington, USA',
       },
+      _package: {
+        codAmount: 300
+      },
       weight: 10,
    },
    {
       orderNumber: 'BAN1505203344',
+      status: 'unprocessed',
       _source: {
          name: 'Dr. Vaidya',
          city: 'Bangalore',
@@ -118,6 +151,9 @@ const order = [
          city: 'Kolkata, India',
       },
       weight: 10,
+      _package: {
+        codAmount: 300
+      },
    },
 ];
 

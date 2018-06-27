@@ -11,14 +11,8 @@ import Table, {
   TableRow,
   TableSortLabel,
 } from 'material-ui/Table';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
+import { Paper, Select, Checkbox, Typography, Toolbar, IconButton, Tooltip, MenuItem } from 'material-ui';
+import {FilterList, Delete, ViewList, ArrowDownward, Check} from 'material-ui-icons';
 import { lighten } from 'material-ui/styles/colorManipulator';
 import { AdminOrdersTableHeader as TableHeader } from '../../constants/Table';
 
@@ -36,31 +30,37 @@ const columnData = [
   { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
 ];
 
-class EnhancedTableHead extends React.Component {
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
+const headStyles = theme => {
+  th: {
+    textAlign: 'center'
+  }
+}
 
-  render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+let createSortHandler = (property, onRequestSort) => event => {
+  onRequestSort(event, property);
+};
 
-    return (
+let EnhancedTableHead = props => {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, classes } = props;
+  
+  return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
+          <TableCell padding="checkbox" className={classes.th}>S.NO
+            {/* <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
               onChange={onSelectAllClick}
-            />
+            /> */}
           </TableCell>
           {TableHeader.map(column => {
             return (
               <TableCell
                 key={column.id}
                 numeric={column.numeric}
-                padding={column.disablePadding ? 'none' : 'default'}
+                padding={column.disablePadding ? 'none' : 'checkbox'}
                 sortDirection={orderBy === column.id ? order : false}
+                className={classes.th}
               >
                 <Tooltip
                   title="Sort"
@@ -70,7 +70,7 @@ class EnhancedTableHead extends React.Component {
                   <TableSortLabel
                     active={orderBy === column.id}
                     direction={order}
-                    onClick={this.createSortHandler(column.id)}
+                    onClick={createSortHandler(column.id, props.onRequestSort)}
                   >
                     {column.label}
                   </TableSortLabel>
@@ -81,8 +81,7 @@ class EnhancedTableHead extends React.Component {
         </TableRow>
       </TableHead>
     );
-  }
-}
+};
 
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -91,7 +90,10 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
+  classes: PropTypes.object.isRequired,
 };
+
+EnhancedTableHead = withStyles(headStyles)(EnhancedTableHead);
 
 const toolbarStyles = theme => ({
   root: {
@@ -107,8 +109,10 @@ const toolbarStyles = theme => ({
           color: lighten(theme.palette.secondary.light, 0.4),
           backgroundColor: theme.palette.secondary.dark,
         },
-  spacer: {
-    flex: '1 1 100%',
+  bulk: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '0 0 0 auto'
   },
   actions: {
     color: theme.palette.text.secondary,
@@ -116,10 +120,13 @@ const toolbarStyles = theme => ({
   title: {
     flex: '0 0 auto',
   },
+  select: {
+    width: '230px'
+  }
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes, header } = props;
+  const { numSelected, classes, header, bulk, bulkHandler } = props;
 
   return (
     <Toolbar
@@ -134,18 +141,29 @@ let EnhancedTableToolbar = props => {
           <Typography variant="title">{header}</Typography>
         )}
       </div>
-      <div className={classes.spacer} />
+      <div className={classes.bulk}>
+        <Typography variant="subheading" style={{marginRight:'15px',fontSize:'17px'}} >Bulk Actions : </Typography>
+        <Select value={bulk} onChange={bulkHandler} className={classes.select} >
+          <MenuItem value="changeStatus">Change Status</MenuItem>
+          <MenuItem value="downloadCSP">Download CSP Label</MenuItem>
+          <MenuItem value="downloadShipping">Download Shipping Label</MenuItem>
+          <MenuItem value="downloadInvoice">Download Invoice</MenuItem>
+          <MenuItem value="downloadArchive">Download Archive</MenuItem>
+          <MenuItem value="sendToCSP">Send To CSP</MenuItem>
+          <MenuItem value="cancelUnprocessed">Cancel Unprocessed Orders</MenuItem>
+        </Select>
+      </div>
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton aria-label="Delete">
-              <DeleteIcon />
+              <Delete />
             </IconButton>
           </Tooltip>
         ) : (
           <Tooltip title="Filter list">
             <IconButton aria-label="Filter list">
-              <FilterListIcon />
+              <FilterList />
             </IconButton>
           </Tooltip>
         )}
@@ -167,11 +185,26 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
   },
   table: {
-    minWidth: 800,
+    minWidth: 700,
   },
   tableWrapper: {
     overflowX: 'auto',
   },
+  td: {
+    textAlign: 'center',
+  },
+  noTd: {
+    textAlign: 'center',
+    cursor: 'pointer'
+  },
+  iconButton: {
+    width: '30px',
+    height: '30px'
+  },
+  checkbox: {
+    fontSize: '20px',
+    width: '20px'
+  }
 });
 
 class OrdersTable extends React.Component {
@@ -245,13 +278,13 @@ class OrdersTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, header } = this.props;
+    const { classes, header, bulk, bulkHandler } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} header={header}/>
+        <EnhancedTableToolbar numSelected={selected.length} header={header} bulk={bulk} bulkHandler={bulkHandler} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <EnhancedTableHead
@@ -263,26 +296,33 @@ class OrdersTable extends React.Component {
               rowCount={data.length}
             />
             <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
+              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n, i) => {
                 const isSelected = this.isSelected(n.id);
                 return (
                   <TableRow
                     hover
-                    onClick={event => this.handleClick(event, n.id)}
                     role="checkbox"
                     aria-checked={isSelected}
                     tabIndex={-1}
                     key={n.id || n._id}
                     selected={isSelected}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={isSelected} />
+                    <TableCell padding="checkbox" className={classes.noTd} onClick={event => this.handleClick(event, n.id)}>
+                      <Checkbox checked={isSelected} className={classes.checkbox} /> {i+1}
                     </TableCell>
-                    <TableCell padding="none">{n.orderNumber}</TableCell>
-                    <TableCell numeric>{`${n._source.city}, ${n._source.country}`}</TableCell>
-                    <TableCell numeric>{n._source.name}</TableCell>
-                    <TableCell numeric>{n.weight || '-'}</TableCell>
-                    <TableCell numeric>{`${n._destination.city}, ${n._destination.country}`}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{n.orderNumber}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{n._source.name}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{n._destination.name}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{`${n._destination.city}, ${n._destination.country}`}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{`${n._source.city}, ${n._source.country}`}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{n.weight || '-'}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{n._package.codAmount}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>{n.status}</TableCell>
+                    <TableCell padding="checkbox" className={classes.td}>
+                      <IconButton className={classes.iconButton} ><ViewList /></IconButton>
+                      <IconButton className={classes.iconButton} ><ArrowDownward /></IconButton>
+                      <IconButton className={classes.iconButton} ><Check /></IconButton>
+                    </TableCell>
                   </TableRow>
                 );
               })}

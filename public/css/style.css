@@ -9,7 +9,53 @@ body {
   /*overflow-y: scroll;*/
 }
 
+input {
+  font-size: 14px;
+  padding: 3px;
+  width: 92px;
+  text-align: center;
+}
+th {
+  text-align: center !important;
+}
+
 #drawerLinks a{
 	text-decoration: none;
+}
+
+.MuiSvgIcon-root-67 {
+  font-size: 17px !important;
+}
+
+#order-bulk-dialog-title h2 {
+  text-align: center;
+}
+#order-bulk-dialog-content {
+  display: flex;
+  width: 550px;
+  min-height: 50px;
+  align-items: center;
+  flex-direction: column;
+}
+
+#order-bulk-dialog-content p {
+  text-align: center;
+}
+
+#order-bulk-dialog-contentText {
+
+}
+@media screen and (max-width: 1200px) {
+  th, td {
+    padding: 0 5px !important;
+    padding-right: 5px !important;
+  }
+}
+
+@media screen and (max-width: 1525px) {
+  th, td {
+    padding: 0 3px !important;
+    padding-right: 3px !important;
+  }
 }
 

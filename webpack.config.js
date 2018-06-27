@@ -20,12 +20,19 @@ const config = {
       query: {
         presets: ["env", "react", "es2015", "stage-0"]
       }
+    },
+    {
+      test: /\.css$/,
+      loader: 'style-loader!css-loader'
     }]
   },
   devServer: {
     contentBase: path.resolve(__dirname, "public"),
     historyApiFallback: true,
     compress: true,
+  },
+  node: {
+    fs: 'empty'
   }
 };
 

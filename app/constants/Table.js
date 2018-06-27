@@ -1,9 +1,13 @@
 const AdminOrdersTableHeader = [
-  { id: 'TransactionID', numeric: false, disablePadding: true, label: 'Order Number' },
-  { id: 'PickupAddress.Country', numeric: false, disablePadding: false, label: 'Pickup Address' },
-  { id: 'PickupAddress.Name', numeric: false, disablePadding: false, label: 'Shipper Name (From Name)' },
-  { id: 'Weight', numeric: true, disablePadding: false, label: 'Weight (Kg)' },
-  { id: 'DeliveryAddress.Country', numeric: false, disablePadding: false, label: 'Delivery Address' },
+  { id: 'TransactionID', numeric: false, disablePadding: false, label: 'ORDER NO' },
+  { id: 'PickupAddress.Name', numeric: false, disablePadding: false, label: 'SHIPPER NAME' },
+  { id: 'DeliveryAddress.Name', numeric: false, disablePadding: false, label: 'RECEIVER NAME' },
+  { id: 'PickupAddress.Country', numeric: false, disablePadding: false, label: 'ORIGIN' },
+  { id: 'DeliveryAddress.Country', numeric: false, disablePadding: false, label: 'DESTINATION' },
+  { id: 'Weight', numeric: false, disablePadding: false, label: 'WEIGHT (Kg)' },
+  { id: 'Amount', numeric: false, disablePadding: false, label: 'TOTAL AMOUNT' },
+  { id: 'Status', numeric: false, disablePadding: false, label: 'STATUS' },
+  { id: 'Actions', numeric: false, disablePadding: false, label: 'ACTIONS' },
 ];
 
 export { AdminOrdersTableHeader }

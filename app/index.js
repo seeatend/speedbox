@@ -41,7 +41,7 @@ const IndexRoutes = (
 
 render(
   <Provider store={store}>
-    <MuiThemeProvider muiTheme={muiTheme}>
+    <MuiThemeProvider theme={muiTheme}>
       <Router>{IndexRoutes}</Router>
     </MuiThemeProvider>
   </Provider>,

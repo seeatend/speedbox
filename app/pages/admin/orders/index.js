@@ -86,7 +86,8 @@ class Orders extends React.Component {
 			toDate: moment(),
 			copVal: false,
 			bulk: "",
-			openDialog: false
+			openDialog: false,
+			selectedOrders: []
 		};
 		
 		this.handleDateChange = this.handleDateChange.bind(this);
@@ -105,6 +106,11 @@ class Orders extends React.Component {
 	componentWillReceiveProps(nextProps) {
 			console.log("~~~~ Orders updated!")
 			this.excelDataFormat(nextProps.orderState.orders)
+
+			if(nextProps.orderState.bulk_data != "") {
+				this.refs.dwnldLnk.href = 'data:application/octet-stream;base64,' + nextProps.orderState.bulk_data;
+				this.refs.dwnldLnk.click();
+			}
 	}
 	excelDataFormat(newOrders) {
 		excelData[0].data = newOrders.map(i => {
@@ -154,6 +160,9 @@ class Orders extends React.Component {
 	handleCopChange = event => {
     this.setState({ copVal: event.target.checked });
 	};
+	setSelectedOrders = orderIds => {
+		this.setState({ selectedOrders: orderIds });
+	}
 	
 	closeDialog = () => {
     this.setState({ openDialog: false });
@@ -262,12 +271,13 @@ class Orders extends React.Component {
 						</Grid>
 					) : (
 						<Grid item xs={6} sm={12} md={12} lg={12}>
-							<OrdersTable Orders={orders} header={'Orders'} bulk={this.state.bulk} bulkHandler={this.bulkActionHandler} />
+							<OrdersTable Orders={orders} header={'Orders'} bulk={this.state.bulk} bulkHandler={this.bulkActionHandler} setSelectedOrders={this.setSelectedOrders} />
 						</Grid>
 					)}
 				</Grid>
-
-				<DialogWrapper openDialog={this.state.openDialog} closeDialog={this.closeDialog} bulk={this.state.bulk} />
+				
+        <a id="dwnldLnk" ref="dwnldLnk" download="base64topdf.pdf" style={{display:'none'}} />
+				<DialogWrapper openDialog={this.state.openDialog} closeDialog={this.closeDialog} bulk={this.state.bulk} selectedOrders={this.state.selectedOrders} />
 			</div>
 		);
 	}

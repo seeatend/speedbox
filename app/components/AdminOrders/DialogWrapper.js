@@ -5,6 +5,8 @@ import { withStyles } from 'material-ui/styles';
 import { Dialog, DialogActions, DialogContent, DialogTitle,DialogContentText, Button, Slide } from 'material-ui';
 import { Grid, TextField, Select, MenuItem } from 'material-ui';
 
+import { ordersBulkActions } from '../../core/actions/admin/orders';
+
 const styles = theme => ({
   dialogAction: {
     margin: '0 20px 20px 20px !important',
@@ -98,6 +100,26 @@ class DialogWrapper extends React.Component {
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
+
+  bulkActionHandler = () => {
+    if(this.props.selectedOrders.length > 0) {
+      let params = {}
+      params.orderIds = this.props.selectedOrders;
+      if(this.props.bulk == "changeStatus") {
+        params.status = this.state.selectedStatus;
+        params.message = this.state.selectedStatusMsg;
+      }
+      if(this.props.bulk == "sendToCSP") {
+        params.csp = this.state.selectedCSP;
+      }
+      this.props.ordersBulkActionHandler(this.props.bulk, params)
+      this.closeDialog();
+    } else {
+      this.closeDialog();
+      alert("Please select the orders firstly.");
+      return false;
+    }
+  }
   
   closeDialog = () => {
     this.props.closeDialog()
@@ -132,7 +154,7 @@ class DialogWrapper extends React.Component {
             }
           </DialogContent>
           <DialogActions className={classes.dialogAction} >
-            <Button variant="raised" onClick={this.closeDialog} color="secondary">
+            <Button variant="raised" onClick={this.bulkActionHandler} color="secondary">
               Yes! Go Ahead
             </Button>
             <Button variant="raised" onClick={this.closeDialog}>
@@ -145,4 +167,25 @@ class DialogWrapper extends React.Component {
   } 
 }
 
-export default withStyles(styles)(DialogWrapper);
+function mapStateToProps(state) {
+	return {
+		user: state.user,
+		orderState: state.aOrders,
+	};
+}
+
+const mapDispatchToProps = dispatch => {
+	return {
+		doLogin: data => {
+			dispatch(doLogin(data));
+		},
+
+		ordersBulkActionHandler: (bulk, data) => {
+			dispatch(ordersBulkActions(bulk, data));
+		},
+	};
+};
+
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(DialogWrapper)
+);

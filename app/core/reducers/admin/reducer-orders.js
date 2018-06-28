@@ -4,6 +4,7 @@ const initialState = {
   payloadCount: 0,
   orders: [],
   orders_count: 0,
+  bulk_data: "",
   ui_error: false,
   ui_loading: false,
   filters: {
@@ -37,6 +38,16 @@ export default (state = initialState, action) => {
         orders: orders,
         loading: false,
         loaded: true
+      };
+
+      return state;
+      break;
+
+    case 'ADMIN_ORDERS_BULK_FULFILLED':
+      const bulk_data = action.payload.data;
+      state = {
+        ...state,
+        bulk_data: bulk_data
       };
 
       return state;

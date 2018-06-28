@@ -24,6 +24,15 @@ const config = {
     {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
+    },
+    {
+      test: /\.(pdf)$/,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {}
+        }
+      ]
     }]
   },
   devServer: {

@@ -263,8 +263,10 @@ class OrdersTable extends React.Component {
         selected.slice(selectedIndex + 1),
       );
     }
-
-    this.setState({ selected: newSelected });
+    
+    this.setState({ selected: newSelected }, () => {
+      this.props.setSelectedOrders(this.state.selected);
+    });
   };
 
   handleChangePage = (event, page) => {
@@ -297,7 +299,7 @@ class OrdersTable extends React.Component {
             />
             <TableBody>
               {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n, i) => {
-                const isSelected = this.isSelected(n.id);
+                const isSelected = this.isSelected(n.orderNumber);
                 return (
                   <TableRow
                     hover
@@ -307,7 +309,7 @@ class OrdersTable extends React.Component {
                     key={n.id || n._id}
                     selected={isSelected}
                   >
-                    <TableCell padding="checkbox" className={classes.noTd} onClick={event => this.handleClick(event, n.id)}>
+                    <TableCell padding="checkbox" className={classes.noTd} onClick={event => this.handleClick(event, n.orderNumber)}>
                       <Checkbox checked={isSelected} className={classes.checkbox} /> {i+1}
                     </TableCell>
                     <TableCell padding="checkbox" className={classes.td}>{n.orderNumber}</TableCell>

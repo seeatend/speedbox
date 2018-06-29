@@ -8,18 +8,14 @@ import { Reorder, Clear, Search } from 'material-ui-icons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
-import _ from 'lodash';
-
-import ReactExport from 'react-data-export';
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 
 import { AdminOrdersTableHeader as TableHeader } from '../../../constants/Table';
 import SearchModule from '../../../components/Common/SearchModule';
 import FilterModule from '../../../components/Common/FilterModule';
+import DownloadBtn from '../../../components/Common/DownloadBtn';
 
 import { doLogin } from '../../../core/actions/app/login';
-import { getOrders } from '../../../core/actions/admin/orders';
+import { getOrders, cleanBulkData } from '../../../core/actions/admin/orders';
 import OrdersTable from '../../../components/AdminOrders/OrdersTable';
 import DialogWrapper from '../../../components/AdminOrders/DialogWrapper';
 
@@ -37,11 +33,6 @@ const styles = theme => ({
 	downloadContent: {
 		paddingLeft: "20px"
 	},
-	downloadBtn: {
-		fontSize: "16px",
-		width: "125px",
-    padding: "8px 15px"
-	},
 	label: {
 		paddingLeft: "45%",
 		paddingTop: "5px"
@@ -57,6 +48,7 @@ class Orders extends React.Component {
 		this.state = {
 			// auth: true,
 			// anchorEl: null,
+			pageNumber: 0,
 			searchKey: "orderNo",
 			searchVal: "",
 			statusKey: "placed",
@@ -88,6 +80,7 @@ class Orders extends React.Component {
 			if(nextProps.orderState.bulk_data != "") {
 				this.refs.dwnldLnk.href = 'data:application/octet-stream;base64,' + nextProps.orderState.bulk_data;
 				this.refs.dwnldLnk.click();
+				nextProps.cleanBulkData();
 			}
 	}
 	excelDataFormat(newOrders) {
@@ -173,12 +166,7 @@ class Orders extends React.Component {
 								<Grid item><DatePicker onChange={this.handleDateChange('toDate')} selected={this.state.toDate} dateFormat="YYYY/MM/DD" /></Grid>
 							</Grid>
 							<Grid item>
-								{/* <Button variant="raised" size="small" className={classes.downloadBtn}>DOWNLOAD ARCHIVE</Button> */}
-								<div>
-										<ExcelFile element={<Button variant="raised" size="small" className={classes.downloadBtn}>DOWNLOAD ARCHIVE</Button>}>
-												<ExcelSheet dataSet={excelData} name="Organization"/>
-										</ExcelFile>
-								</div>
+								<DownloadBtn excelData={excelData} />
 							</Grid>
 						</Grid>
 					</Grid>
@@ -203,7 +191,12 @@ class Orders extends React.Component {
 						</Grid>
 					) : (
 						<Grid item xs={6} sm={12} md={12} lg={12}>
-							<OrdersTable Orders={orders} header={'Orders'} bulk={this.state.bulk} bulkHandler={this.bulkActionHandler} setSelectedOrders={this.setSelectedOrders} />
+							<OrdersTable 
+								Orders={orders} 
+								header={'Orders'} 
+								bulk={this.state.bulk} 
+								bulkHandler={this.bulkActionHandler} 
+								setSelectedOrders={this.setSelectedOrders} />
 						</Grid>
 					)}
 				</Grid>
@@ -227,10 +220,12 @@ const mapDispatchToProps = dispatch => {
 		doLogin: data => {
 			dispatch(doLogin(data));
 		},
-
 		getOrders: sysId => {
 			dispatch(getOrders(sysId));
 		},
+		cleanBulkData: () => {
+			dispatch(cleanBulkData);
+		}
 	};
 };
 

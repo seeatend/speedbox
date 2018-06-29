@@ -31,11 +31,16 @@ const columnData = [
   { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
 ];
 
-const headStyles = theme => {
+const headStyles = theme => ({
   th: {
-    textAlign: 'center'
+    textAlign: 'center',
+    cursor: 'pointer'
+  },
+  checkbox: {
+    fontSize: '20px',
+    width: '20px'
   }
-}
+})
 
 let createSortHandler = (property, onRequestSort) => event => {
   onRequestSort(event, property);
@@ -47,12 +52,12 @@ let EnhancedTableHead = props => {
   return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.th}>S.NO
-            {/* <Checkbox
+          <TableCell padding="checkbox" className={classes.th} onClick={event => onSelectAllClick(event, numSelected === rowCount)} >
+            <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
-              onChange={onSelectAllClick}
-            /> */}
+              className={classes.checkbox}
+            />S.NO
           </TableCell>
           {TableHeader.map(column => {
             return (
@@ -224,20 +229,24 @@ class OrdersTable extends React.Component {
   };
 
   handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.id) });
+    if (!checked) {
+      this.setState({ selected: this.state.data.map(n => n.orderNumber) }, () => {
+        this.props.setSelectedOrders(this.state.selected);
+      });
       return;
     }
-    this.setState({ selected: [] });
+    this.setState({ selected: [] }, () => {
+      this.props.setSelectedOrders(this.state.selected);
+    });
   };
 
-  handleClick = (event, id) => {
+  handleClick = (event, orderNum) => {
     const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
+    const selectedIndex = selected.indexOf(orderNum);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, orderNum);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -262,7 +271,7 @@ class OrdersTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  isSelected = orderNum => this.state.selected.indexOf(orderNum) !== -1;
 
   render() {
     const { classes, header, bulk, bulkHandler } = this.props;
@@ -295,7 +304,7 @@ class OrdersTable extends React.Component {
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox" className={classes.noTd} onClick={event => this.handleClick(event, n.orderNumber)}>
-                      <Checkbox checked={isSelected} className={classes.checkbox} /> {i+1}
+                      <Checkbox checked={isSelected} className={classes.checkbox} /> {page*rowsPerPage+i+1}
                     </TableCell>
                     <TableCell padding="checkbox" className={classes.td}>{n.orderNumber}</TableCell>
                     <TableCell padding="checkbox" className={classes.td}>{n._source.name}</TableCell>
@@ -315,7 +324,7 @@ class OrdersTable extends React.Component {
               })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={10} />
                 </TableRow>
               )}
             </TableBody>

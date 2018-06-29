@@ -52,6 +52,15 @@ export default (state = initialState, action) => {
 
       return state;
       break;
+
+    case 'CLEAN_BULK_DATA':
+      state = {
+        ...state,
+        bulk_data: ""
+      };
+
+      return state;
+      break;
   }
 
   return state;

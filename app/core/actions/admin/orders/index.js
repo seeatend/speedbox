@@ -2,6 +2,10 @@ const ServiceUtil = require('../../../../utils/serviceUtils');
 const dummyOrders = require('./dummyData');
 const base64Data = require('./base64Data');
 
+export const cleanBulkData = {
+  type: "CLEAN_BULK_DATA"
+};
+
 export function getOrders(params) {
   return {
     type: 'ADMIN_GET_ORDERS',

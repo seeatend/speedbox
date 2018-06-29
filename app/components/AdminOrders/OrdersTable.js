@@ -15,6 +15,7 @@ import { Paper, Select, Checkbox, Typography, Toolbar, IconButton, Tooltip, Menu
 import {FilterList, Delete, ViewList, ArrowDownward, Check} from 'material-ui-icons';
 import { lighten } from 'material-ui/styles/colorManipulator';
 import { AdminOrdersTableHeader as TableHeader } from '../../constants/Table';
+import BulkActionSelect from '../Common/BulkActionSelect';
 
 let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
@@ -109,20 +110,12 @@ const toolbarStyles = theme => ({
           color: lighten(theme.palette.secondary.light, 0.4),
           backgroundColor: theme.palette.secondary.dark,
         },
-  bulk: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '0 0 0 auto'
-  },
   actions: {
     color: theme.palette.text.secondary,
   },
   title: {
     flex: '0 0 auto',
   },
-  select: {
-    width: '230px'
-  }
 });
 
 let EnhancedTableToolbar = props => {
@@ -141,18 +134,10 @@ let EnhancedTableToolbar = props => {
           <Typography variant="title">{header}</Typography>
         )}
       </div>
-      <div className={classes.bulk}>
-        <Typography variant="subheading" style={{marginRight:'15px',fontSize:'17px'}} >Bulk Actions : </Typography>
-        <Select value={bulk} onChange={bulkHandler} className={classes.select} >
-          <MenuItem value="changeStatus">Change Status</MenuItem>
-          <MenuItem value="downloadCSP">Download CSP Label</MenuItem>
-          <MenuItem value="downloadShipping">Download Shipping Label</MenuItem>
-          <MenuItem value="downloadInvoice">Download Invoice</MenuItem>
-          <MenuItem value="downloadArchive">Download Archive</MenuItem>
-          <MenuItem value="sendToCSP">Send To CSP</MenuItem>
-          <MenuItem value="cancelUnprocessed">Cancel Unprocessed Orders</MenuItem>
-        </Select>
-      </div>
+      <BulkActionSelect 
+        bulk={bulk}
+        bulkHandler={bulkHandler}
+      />
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">

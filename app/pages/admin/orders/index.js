@@ -15,6 +15,8 @@ const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 
 import { AdminOrdersTableHeader as TableHeader } from '../../../constants/Table';
+import SearchModule from '../../../components/Common/SearchModule';
+import FilterModule from '../../../components/Common/FilterModule';
 
 import { doLogin } from '../../../core/actions/app/login';
 import { getOrders } from '../../../core/actions/admin/orders';
@@ -29,17 +31,6 @@ let excelData = [{
 }];
 
 const styles = theme => ({
-	select: {
-		width: "145px"
-	},
-	textField: {
-		width: "150px"
-	},
-	button: {
-		fontSize: "15px",
-		fontWeight: "normal",
-		padding: "3px 8px"
-	},
 	extra: {
 		marginBottom: "5px"
 	},
@@ -52,21 +43,8 @@ const styles = theme => ({
     padding: "8px 15px"
 	},
 	label: {
-		paddingLeft: "45%"
-	},
-	filtersUp: {
-		border: "1px solid #ccc",
-    borderBottom: "none",
-    padding: "10px 20px"
-	},
-	filtersDown: {
-		border: "1px solid #ccc",
-    borderTop: "none",
-    padding: "0 20px 25px"
-	},
-	searchIcon: {
-		fontSize: "25px !important",
-		cursor: "pointer"
+		paddingLeft: "45%",
+		paddingTop: "5px"
 	},
 	loader: {
     "textAlign": "center"
@@ -176,29 +154,17 @@ class Orders extends React.Component {
 		
 		return (
 			<div className="orders-container">
-				<Grid container alignItems="center">
+				<Grid container>
 					<Grid item xs={12}><Typography variant="title">VIEW ORDERS</Typography></Grid>
 					<Grid item xs={2}><Typography variant="body1"  className={classes.label}>SEARCH BY :</Typography></Grid>
 					<Grid item xs={6}>
-						<Grid container alignItems="center">
-							<Grid item >
-								<Select value={this.state.searchKey} onChange={this.handleChange('searchKey')} className={classes.select} >
-									<MenuItem value="orderNo">Order Number</MenuItem>
-									<MenuItem value="email">Email</MenuItem>
-									<MenuItem value="shipName">Shipper Name</MenuItem>
-									<MenuItem value="consinee">Consinee Name</MenuItem>
-									<MenuItem value="address">Address</MenuItem>
-									<MenuItem value="customerRef">Customer Reference</MenuItem>
-									<MenuItem value="awb">AWB</MenuItem>
-									<MenuItem value="returnAwb">Return AWB</MenuItem>
-									<MenuItem value="companyName">Company Name</MenuItem>
-								</Select>
-							</Grid>
-							<Grid item >
-								<TextField id="search_val" value={this.state.searchVal} onChange={this.handleChange('searchVal')} margin="none" className={classes.textField} />
-							</Grid>
-							<Grid item ><Search className={classes.searchIcon} onClick={this.getOrdersBySearch} /></Grid>
-						</Grid>
+						<SearchModule 
+							searchKey={this.state.searchKey} 
+							handleSearchKeyChange={this.handleChange('searchKey')} 
+							searchVal={this.state.searchVal} 
+							handleSearchValChange={this.handleChange('searchVal')} 
+							searchHandler={this.getOrdersBySearch}
+						/>
 					</Grid>
 					<Grid item xs={4} className={classes.downloadContent} >
 						<Grid container alignItems="center" spacing={24}>
@@ -217,53 +183,19 @@ class Orders extends React.Component {
 						</Grid>
 					</Grid>
 					<Grid item xs={2}><Typography variant="body1" className={classes.label}>FILTERS :</Typography></Grid>
-					<Grid item xs={6} className={classes.filtersUp} >
-						<Grid container alignItems="center">
-							<Grid item xs={6} >
-								<Grid container alignItems="center" spacing={24} >
-									<Grid item><DatePicker onChange={this.handleDateChange('fromDate')} selected={this.state.fromDate} dateFormat="YYYY/MM/DD" /></Grid>
-									<Grid item><DatePicker onChange={this.handleDateChange('toDate')} selected={this.state.toDate} dateFormat="YYYY/MM/DD" /></Grid>
-								</Grid>
-							</Grid>
-							<Grid item xs={6} >
-								<Grid container alignItems="center" spacing={16} >
-									<Grid item><Typography variant="body1">COP </Typography></Grid>
-									<Grid item><Switch checked={this.state.copVal} onChange={this.handleCopChange} /></Grid>
-								</Grid>
-							</Grid>
-						</Grid>
-					</Grid>
-					<Grid item xs={4}></Grid>
-					<Grid item xs={2}></Grid>
-					<Grid item xs={6} className={classes.filtersDown}>
-						<Grid container>
-							<Grid item xs={6}>
-								<Grid container  alignItems="center" spacing={24}>
-									<Grid item><Typography variant="body1">STATUS :</Typography></Grid>
-									<Grid item >
-										<Select value={this.state.statusKey} onChange={this.handleChange('statusKey')} className={classes.select} >
-											<MenuItem value="placed">Placed</MenuItem>
-											<MenuItem value="assigned">Assigned</MenuItem>
-											<MenuItem value="pickup">Pickup</MenuItem>
-											<MenuItem value="in_transit">In Transition</MenuItem>
-											<MenuItem value="rto">Rto</MenuItem>
-											<MenuItem value="delivery_exception">Delivery Exception</MenuItem>
-											<MenuItem value="cancelled">Cancelled</MenuItem>
-											<MenuItem value="delivered">Delivered</MenuItem>
-											<MenuItem value="ready_to_process">Ready To Process</MenuItem>
-											<MenuItem value="processed">Processed</MenuItem>
-											<MenuItem value="unprocessed">Unprocessed</MenuItem>
-										</Select>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item xs={6}>
-								<Grid container  alignItems="center" spacing={24}>
-									<Grid item><Button variant="raised" size="small" className={classes.button} onClick={this.getOrdersByFilters} ><Reorder />APPLY</Button></Grid>
-									<Grid item><Button variant="raised" size="small" className={classes.button} onClick={this.clearFilters} ><Clear />CLEAR</Button></Grid>
-								</Grid>
-							</Grid>
-						</Grid>
+					<Grid item xs={6}>
+						<FilterModule 
+							fromDate={this.state.fromDate}
+							toDate={this.state.toDate}
+							handleFromDateChange={this.handleDateChange('fromDate')}
+							handleToDateChange={this.handleDateChange('toDate')}
+							copVal={this.state.copVal}
+							handleCopChange={this.handleCopChange}
+							statusKey={this.state.statusKey}
+							handleStatusChange={this.handleChange('statusKey')}
+							applyHandler={this.getOrdersByFilters}
+							clearHandler={this.clearFilters}
+						/>
 					</Grid>
 					{orderState.loading ? (
 						<Grid item xs={6} sm={12} md={12} lg={12}>

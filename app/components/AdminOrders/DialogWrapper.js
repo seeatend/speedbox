@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import { Dialog, DialogActions, DialogContent, DialogTitle,DialogContentText, Button, Slide } from 'material-ui';
 import { Grid, TextField, Select, MenuItem } from 'material-ui';
 
+import StatusSelect from '../Common/StatusSelect';
 import { ordersBulkActions } from '../../core/actions/admin/orders';
 
 const styles = theme => ({
@@ -31,19 +32,7 @@ let ChangeStatusContent = (props) => {
   return (
     <Grid container >
       <TextField id="search_val" value={selectedStatusMsg} onChange={handleChange('selectedStatusMsg')} placeholder="Enter some message..." margin="none" className={classes.textField} />
-      <Select value={selectedStatus} onChange={handleChange('selectedStatus')} className={classes.select} >
-        <MenuItem value="placed">Placed</MenuItem>
-        <MenuItem value="assigned">Assigned</MenuItem>
-        <MenuItem value="pickup">Pickup</MenuItem>
-        <MenuItem value="in_transit">In Transition</MenuItem>
-        <MenuItem value="rto">Rto</MenuItem>
-        <MenuItem value="delivery_exception">Delivery Exception</MenuItem>
-        <MenuItem value="cancelled">Cancelled</MenuItem>
-        <MenuItem value="delivered">Delivered</MenuItem>
-        <MenuItem value="ready_to_process">Ready To Process</MenuItem>
-        <MenuItem value="processed">Processed</MenuItem>
-        <MenuItem value="unprocessed">Unprocessed</MenuItem>
-      </Select>
+      <StatusSelect statusKey={selectedStatus} handleStatusChange={handleChange('selectedStatus')} classname={classes.select} />
     </Grid>
   )
 }

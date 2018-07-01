@@ -3,103 +3,16 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Table, {
-  TableBody,
-  TableCell,
   TableFooter,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
 } from 'material-ui/Table';
-import { Paper, Select, Checkbox, Typography, Toolbar, IconButton, Tooltip, MenuItem } from 'material-ui';
-import {FilterList, Delete, ViewList, ArrowDownward, Check} from 'material-ui-icons';
+import { Paper, Typography, Toolbar, IconButton, Tooltip } from 'material-ui';
+import { FilterList, Delete } from 'material-ui-icons';
 import { lighten } from 'material-ui/styles/colorManipulator';
-import { AdminOrdersTableHeader as TableHeader } from '../../constants/Table';
 import BulkActionSelect from '../Common/BulkActionSelect';
-
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
-
-const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
-];
-
-const headStyles = theme => ({
-  th: {
-    textAlign: 'center',
-    cursor: 'pointer'
-  },
-  checkbox: {
-    fontSize: '20px',
-    width: '20px'
-  }
-})
-
-let createSortHandler = (property, onRequestSort) => event => {
-  onRequestSort(event, property);
-};
-
-let EnhancedTableHead = props => {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, classes } = props;
-  
-  return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox" className={classes.th} onClick={event => onSelectAllClick(event, numSelected === rowCount)} >
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount}
-              className={classes.checkbox}
-            />S.NO
-          </TableCell>
-          {TableHeader.map(column => {
-            return (
-              <TableCell
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? 'none' : 'checkbox'}
-                sortDirection={orderBy === column.id ? order : false}
-                className={classes.th}
-              >
-                <Tooltip
-                  title="Sort"
-                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={order}
-                    onClick={createSortHandler(column.id, props.onRequestSort)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-};
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-  classes: PropTypes.object.isRequired,
-};
-
-EnhancedTableHead = withStyles(headStyles)(EnhancedTableHead);
+import OrdersTableBody from '../Common/TableBody/Orders';
+import OrdersTableHeader from '../Common/TableHeader/Header';
 
 const toolbarStyles = theme => ({
   root: {
@@ -180,21 +93,6 @@ const styles = theme => ({
   tableWrapper: {
     overflowX: 'auto',
   },
-  td: {
-    textAlign: 'center',
-  },
-  noTd: {
-    textAlign: 'center',
-    cursor: 'pointer'
-  },
-  iconButton: {
-    width: '30px',
-    height: '30px'
-  },
-  checkbox: {
-    fontSize: '20px',
-    width: '20px'
-  }
 });
 
 class OrdersTable extends React.Component {
@@ -206,9 +104,7 @@ class OrdersTable extends React.Component {
       order: 'asc',
       orderBy: 'calories',
       selected: [],
-      data: Orders.sort((a, b) => (a.calories < b.calories ? -1 : 1)),
-      page: 0,
-      rowsPerPage: 5,
+      data: Orders.sort((a, b) => (a.calories < b.calories ? -1 : 1))
     };
   }
 
@@ -264,18 +160,18 @@ class OrdersTable extends React.Component {
   };
 
   handleChangePage = (event, page) => {
-    this.setState({ page });
+    this.props.handleChangePage(page);
   };
 
   handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+    this.props.handleChangeRowsPerPage(event.target.value);
   };
 
   isSelected = orderNum => this.state.selected.indexOf(orderNum) !== -1;
 
   render() {
-    const { classes, header, bulk, bulkHandler } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { classes, header, bulk, bulkHandler, page, rowsPerPage } = this.props;
+    const { data, order, orderBy, selected } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
@@ -283,7 +179,8 @@ class OrdersTable extends React.Component {
         <EnhancedTableToolbar numSelected={selected.length} header={header} bulk={bulk} bulkHandler={bulkHandler} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
-            <EnhancedTableHead
+            <OrdersTableHeader
+              tableType="orders"
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -291,43 +188,14 @@ class OrdersTable extends React.Component {
               onRequestSort={this.handleRequestSort}
               rowCount={data.length}
             />
-            <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n, i) => {
-                const isSelected = this.isSelected(n.orderNumber);
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isSelected}
-                    tabIndex={-1}
-                    key={n.id || n._id}
-                    selected={isSelected}
-                  >
-                    <TableCell padding="checkbox" className={classes.noTd} onClick={event => this.handleClick(event, n.orderNumber)}>
-                      <Checkbox checked={isSelected} className={classes.checkbox} /> {page*rowsPerPage+i+1}
-                    </TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{n.orderNumber}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{n._source.name}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{n._destination.name}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{`${n._destination.city}, ${n._destination.country}`}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{`${n._source.city}, ${n._source.country}`}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{n.weight || '-'}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{n._package.codAmount}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>{n.status}</TableCell>
-                    <TableCell padding="checkbox" className={classes.td}>
-                      <IconButton className={classes.iconButton} ><ViewList /></IconButton>
-                      <IconButton className={classes.iconButton} ><ArrowDownward /></IconButton>
-                      <IconButton className={classes.iconButton} ><Check /></IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={10} />
-                </TableRow>
-              )}
-            </TableBody>
+            <OrdersTableBody 
+              data={data}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              isSelected={this.isSelected}
+              handleClick={this.handleClick}
+              emptyRows={emptyRows}
+            />
             <TableFooter>
               <TableRow>
                 <TablePagination

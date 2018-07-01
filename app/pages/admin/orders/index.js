@@ -9,7 +9,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
-import { AdminOrdersTableHeader as TableHeader } from '../../../constants/Table';
+import AdminTableHeader from '../../../constants/Table';
 import SearchModule from '../../../components/Common/SearchModule';
 import FilterModule from '../../../components/Common/FilterModule';
 import DownloadBtn from '../../../components/Common/DownloadBtn';
@@ -20,7 +20,7 @@ import OrdersTable from '../../../components/AdminOrders/OrdersTable';
 import DialogWrapper from '../../../components/AdminOrders/DialogWrapper';
 
 let excelData = [{
-	columns: TableHeader.map(i => {
+	columns: AdminTableHeader.orders.map(i => {
 		return i.label;
 	}),
 	data: []
@@ -57,7 +57,9 @@ class Orders extends React.Component {
 			copVal: false,
 			bulk: "",
 			openDialog: false,
-			selectedOrders: []
+			selectedOrders: [],
+			page: 0,
+			rowsPerPage: 5
 		};
 		
 		this.handleDateChange = this.handleDateChange.bind(this);
@@ -68,6 +70,8 @@ class Orders extends React.Component {
 		this.clearFilters = this.clearFilters.bind(this);
 		this.bulkActionHandler = this.bulkActionHandler.bind(this);
 		this.closeDialog = this.closeDialog.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
 	}
 	
 	componentWillMount() {
@@ -100,7 +104,9 @@ class Orders extends React.Component {
 	getOrdersBySearch() {
 		this.props.getOrders({
 			searchKey: this.state.searchKey,
-			searchVal: this.state.searchVal
+			searchVal: this.state.searchVal,
+			page: this.state.page,
+			rowsPerPage: this.state.rowsPerPage
 		});
 	}
 	getOrdersByFilters() {
@@ -108,7 +114,9 @@ class Orders extends React.Component {
 			fromDate: this.state.fromDate,
 			toDate: this.state.toDate,
 			status: this.state.statusKey,
-			cop: this.state.cop
+			cop: this.state.cop,
+			page: this.state.page,
+			rowsPerPage: this.state.rowsPerPage
 		});
 	}
 	clearFilters() {
@@ -133,6 +141,12 @@ class Orders extends React.Component {
 	};
 	setSelectedOrders = orderIds => {
 		this.setState({ selectedOrders: orderIds });
+	}
+	handleChangePage = page => {
+		this.setState({ page })
+	}
+	handleChangeRowsPerPage = count => {
+		this.setState({ rowsPerPage: count })
 	}
 	
 	closeDialog = () => {
@@ -196,7 +210,12 @@ class Orders extends React.Component {
 								header={'Orders'} 
 								bulk={this.state.bulk} 
 								bulkHandler={this.bulkActionHandler} 
-								setSelectedOrders={this.setSelectedOrders} />
+								setSelectedOrders={this.setSelectedOrders}
+								page={this.state.page}
+								rowsPerPage={this.state.rowsPerPage}
+								handleChangePage={this.handleChangePage}
+								handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+							/>
 						</Grid>
 					)}
 				</Grid>

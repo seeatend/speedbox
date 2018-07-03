@@ -1,9 +1,22 @@
+import moment from 'moment';
 const initialState = {
   loading: false,
   loaded: true,
   payloadCount: 0,
   orders: [],
   orders_count: 0,
+  orders_options: {
+    searchKey: "orderNo",
+    searchVal: "",
+    status: "placed",
+    fromDate: moment(),
+    toDate: moment(),
+    cop: false,
+    bulk: "",
+    selectedOrders: [],
+    page: 0,
+    rowsPerPage: 5
+  },
   bulk_data: "",
   ui_error: false,
   ui_loading: false,
@@ -57,6 +70,18 @@ export default (state = initialState, action) => {
       state = {
         ...state,
         bulk_data: ""
+      };
+
+      return state;
+      break;
+
+    case 'SET_OPTIONS_DATA':
+      state = {
+        ...state,
+        orders_options: {
+          ...state.orders_options,
+          ...action.data
+        }
       };
 
       return state;

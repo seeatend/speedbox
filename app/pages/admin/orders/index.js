@@ -15,7 +15,7 @@ import FilterModule from '../../../components/Common/FilterModule';
 import DownloadBtn from '../../../components/Common/DownloadBtn';
 
 import { doLogin } from '../../../core/actions/app/login';
-import { getOrders, cleanBulkData } from '../../../core/actions/admin/orders';
+import { getOrders, setOrdersOptions, cleanBulkData } from '../../../core/actions/admin/orders';
 import OrdersTable from '../../../components/AdminOrders/OrdersTable';
 import DialogWrapper from '../../../components/AdminOrders/DialogWrapper';
 
@@ -38,7 +38,10 @@ const styles = theme => ({
 		paddingTop: "5px"
 	},
 	loader: {
-    "textAlign": "center"
+    textAlign: "center"
+	},
+	datelabel: {
+		width: "55px"
 	}
 });
 
@@ -48,18 +51,7 @@ class Orders extends React.Component {
 		this.state = {
 			// auth: true,
 			// anchorEl: null,
-			pageNumber: 0,
-			searchKey: "orderNo",
-			searchVal: "",
-			statusKey: "placed",
-			fromDate: moment(),
-			toDate: moment(),
-			copVal: false,
-			bulk: "",
-			openDialog: false,
-			selectedOrders: [],
-			page: 0,
-			rowsPerPage: 5
+			openDialog: false
 		};
 		
 		this.handleDateChange = this.handleDateChange.bind(this);
@@ -75,6 +67,19 @@ class Orders extends React.Component {
 	}
 	
 	componentWillMount() {
+		const search = this.props.location.search;
+		const paramsIterator = new URLSearchParams(search);
+		let params = {}
+		for(let key of paramsIterator.keys()) {
+			if(key == "fromDate" || key == "toDate") {
+				params[key] = moment(parseInt(paramsIterator.get(key)))
+			} else if(key == "page") {
+				params[key] = parseInt(paramsIterator.get(key))
+			} else {
+				params[key] = paramsIterator.get(key);
+			}
+		}
+		this.props.setOrdersOptions(params)
 		this.props.getOrders();
 	}
 	componentWillReceiveProps(nextProps) {
@@ -102,51 +107,49 @@ class Orders extends React.Component {
 		});
 	}
 	getOrdersBySearch() {
-		this.props.getOrders({
-			searchKey: this.state.searchKey,
-			searchVal: this.state.searchVal,
-			page: this.state.page,
-			rowsPerPage: this.state.rowsPerPage
-		});
+		const { searchKey, searchVal, page, rowsPerPage } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?searchKey=${searchKey}&searchVal=${searchVal}&page=${page}&rowsPerPage=${rowsPerPage}`);
+		this.props.setOrdersOptions({page: 0});
+		this.props.getOrders({ searchKey, searchVal, page: 0, rowsPerPage });
 	}
 	getOrdersByFilters() {
-		this.props.getOrders({
-			fromDate: this.state.fromDate,
-			toDate: this.state.toDate,
-			status: this.state.statusKey,
-			cop: this.state.cop,
-			page: this.state.page,
-			rowsPerPage: this.state.rowsPerPage
-		});
+		const { fromDate, toDate, status, cop, page, rowsPerPage } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?fromDate=${fromDate}&toDate=${toDate}&status=${status}&cop=${cop}&page=${page}&rows_count=${rowsPerPage}`);
+		this.props.getOrders({ fromDate, toDate, status, cop, page, rowsPerPage });
 	}
 	clearFilters() {
-		this.setState({
-			fromDate: moment(),
-			toDate: moment(),
-			statusKey: "placed",
-			copVal: false
-		})
+		this.props.setOrdersOptions({ fromDate: moment(), toDate: moment(), status: "placed", cop: false, page: 0 })
+		this.props.history.push(`/orders?fromDate=${fromDate}&toDate=${toDate}&status=${status}&cop=${cop}&page=${page}`);
+		this.getOrdersByFilters();
 	}
 	handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+    this.props.setOrdersOptions({ [name]: event.target.value });
 	};
 	bulkActionHandler = event => {
-    this.setState({ bulk: event.target.value, openDialog: true });
+    this.props.setOrdersOptions({ bulk: event.target.value, openDialog: true });
   };
 	handleDateChange = name => date => {
-    this.setState({ [name]: date });
+    this.props.setOrdersOptions({ [name]: date });
 	}
 	handleCopChange = event => {
-    this.setState({ copVal: event.target.checked });
+    this.props.setOrdersOptions({ cop: event.target.checked });
 	};
 	setSelectedOrders = orderIds => {
-		this.setState({ selectedOrders: orderIds });
+		this.props.setOrdersOptions({ selectedOrders: orderIds });
 	}
 	handleChangePage = page => {
-		this.setState({ page })
+		this.props.setOrdersOptions({ page })
+		this.props.getOrders({
+			...this.props.orderState.orders_options,
+			page
+		});
 	}
 	handleChangeRowsPerPage = count => {
-		this.setState({ rowsPerPage: count })
+		this.props.setOrdersOptions({ rowsPerPage: count })
+		this.props.getOrders({
+			...this.props.orderState.orders_options,
+			rowsPerPage: page
+		});
 	}
 	
 	closeDialog = () => {
@@ -158,26 +161,33 @@ class Orders extends React.Component {
 		const { user } = this.props;
 		const { orderState } = this.props;
 		const { orders } = orderState || [];
+		const { searchKey, searchVal, status, fromDate, toDate, cop, bulk, selectedOrders, page, rowsPerPage } = orderState.orders_options;
 		
 		return (
 			<div className="orders-container">
 				<Grid container>
 					<Grid item xs={12}><Typography variant="title">VIEW ORDERS</Typography></Grid>
-					<Grid item xs={2}><Typography variant="body1"  className={classes.label}>SEARCH BY :</Typography></Grid>
-					<Grid item xs={6}>
+					<Grid item xs={2} lg={2}><Typography variant="body1" className={classes.label}>SEARCH BY :</Typography></Grid>
+					<Grid item xs={5} lg={6}>
 						<SearchModule 
-							searchKey={this.state.searchKey} 
+							searchKey={searchKey} 
 							handleSearchKeyChange={this.handleChange('searchKey')} 
-							searchVal={this.state.searchVal} 
+							searchVal={searchVal} 
 							handleSearchValChange={this.handleChange('searchVal')} 
 							searchHandler={this.getOrdersBySearch}
 						/>
 					</Grid>
-					<Grid item xs={4} className={classes.downloadContent} >
+					<Grid item xs={5} lg={4} className={classes.downloadContent} >
 						<Grid container alignItems="center" spacing={24}>
 							<Grid item>
-								<Grid item><DatePicker onChange={this.handleDateChange('fromDate')} selected={this.state.fromDate} dateFormat="YYYY/MM/DD" className={classes.extra} /></Grid>
-								<Grid item><DatePicker onChange={this.handleDateChange('toDate')} selected={this.state.toDate} dateFormat="YYYY/MM/DD" /></Grid>
+								<Grid container alignItems="center">
+								<Grid item><Typography variant="body1" className={classes.datelabel}>FROM : </Typography></Grid>
+								<Grid item><DatePicker onChange={this.handleDateChange('fromDate')} selected={fromDate} dateFormat="YYYY/MM/DD" className={classes.extra} /></Grid>
+								</Grid>
+								<Grid container alignItems="center">
+								<Grid item><Typography variant="body1" className={classes.datelabel}>TO : </Typography></Grid>
+								<Grid item><DatePicker onChange={this.handleDateChange('toDate')} selected={toDate} dateFormat="YYYY/MM/DD" /></Grid>
+								</Grid>
 							</Grid>
 							<Grid item>
 								<DownloadBtn excelData={excelData} />
@@ -185,16 +195,16 @@ class Orders extends React.Component {
 						</Grid>
 					</Grid>
 					<Grid item xs={2}><Typography variant="body1" className={classes.label}>FILTERS :</Typography></Grid>
-					<Grid item xs={6}>
+					<Grid item xs={9} md={9} lg={7} style={{marginTop:'10px'}}>
 						<FilterModule 
-							fromDate={this.state.fromDate}
-							toDate={this.state.toDate}
+							fromDate={fromDate}
+							toDate={toDate}
 							handleFromDateChange={this.handleDateChange('fromDate')}
 							handleToDateChange={this.handleDateChange('toDate')}
-							copVal={this.state.copVal}
+							cop={cop}
 							handleCopChange={this.handleCopChange}
-							statusKey={this.state.statusKey}
-							handleStatusChange={this.handleChange('statusKey')}
+							status={status}
+							handleStatusChange={this.handleChange('status')}
 							applyHandler={this.getOrdersByFilters}
 							clearHandler={this.clearFilters}
 						/>
@@ -208,11 +218,11 @@ class Orders extends React.Component {
 							<OrdersTable 
 								Orders={orders} 
 								header={'Orders'} 
-								bulk={this.state.bulk} 
+								bulk={bulk} 
 								bulkHandler={this.bulkActionHandler} 
 								setSelectedOrders={this.setSelectedOrders}
-								page={this.state.page}
-								rowsPerPage={this.state.rowsPerPage}
+								page={page}
+								rowsPerPage={rowsPerPage}
 								handleChangePage={this.handleChangePage}
 								handleChangeRowsPerPage={this.handleChangeRowsPerPage}
 							/>
@@ -221,7 +231,7 @@ class Orders extends React.Component {
 				</Grid>
 				
         <a id="dwnldLnk" ref="dwnldLnk" download="base64topdf.pdf" style={{display:'none'}} />
-				<DialogWrapper openDialog={this.state.openDialog} closeDialog={this.closeDialog} bulk={this.state.bulk} selectedOrders={this.state.selectedOrders} />
+				<DialogWrapper openDialog={this.state.openDialog} closeDialog={this.closeDialog} bulk={bulk} selectedOrders={selectedOrders} />
 			</div>
 		);
 	}
@@ -241,6 +251,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		getOrders: sysId => {
 			dispatch(getOrders(sysId));
+		},
+		setOrdersOptions: options => {
+			dispatch(setOrdersOptions(options));
 		},
 		cleanBulkData: () => {
 			dispatch(cleanBulkData);

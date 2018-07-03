@@ -6,20 +6,20 @@ import ordersConstant from "../../constants/Orders";
 
 const styles = theme => ({
   select: {
-    width: "145px"
+    width: "170px"
   }
 })
 
 let StatusSelect = (props) => {
   const { 
-    statusKey,
+    status,
     handleStatusChange,
     classname,
     classes
   } = props;
   
   return (
-    <Select value={statusKey} onChange={handleStatusChange} className={classname!=null?classname:classes.select} >
+    <Select value={status} onChange={handleStatusChange} className={classname!=null?classname:classes.select} >
       {
         ordersConstant.status.map((s, i) => {
           return <MenuItem value={s.value} key={i}>{s.label}</MenuItem>

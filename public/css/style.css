@@ -58,4 +58,8 @@ th {
     padding-right: 3px !important;
   }
 }
-
+@media screen and (max-width: 1200px) {
+  .Connect-Orders--label-161 {
+    padding-left: 30% !important;
+  }
+}

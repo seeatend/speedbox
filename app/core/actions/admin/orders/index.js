@@ -6,6 +6,11 @@ export const cleanBulkData = {
   type: "CLEAN_BULK_DATA"
 };
 
+export const setOrdersOptions = data => ({
+  type: "SET_OPTIONS_DATA",
+  data
+});
+
 export function getOrders(params) {
   return {
     type: 'ADMIN_GET_ORDERS',

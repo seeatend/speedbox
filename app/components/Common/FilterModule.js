@@ -24,7 +24,10 @@ const styles = theme => ({
 		fontSize: "15px",
 		fontWeight: "normal",
 		padding: "3px 8px"
-	},
+  },
+  datepicker: {
+    padding: "12px 0 !important"
+  }
 })
 
 let FilterModule = (props) => {
@@ -33,9 +36,9 @@ let FilterModule = (props) => {
     toDate,
     handleFromDateChange,
     handleToDateChange,
-    copVal,
+    cop,
     handleCopChange,
-    statusKey,
+    status,
     handleStatusChange,
     applyHandler,
     clearHandler,
@@ -46,31 +49,33 @@ let FilterModule = (props) => {
     <Grid container>
       <Grid item xs={12} className={classes.filtersUp} >
         <Grid container alignItems="center">
-          <Grid item xs={6} >
+          <Grid item xs={8} >
             <Grid container alignItems="center" spacing={24} >
-              <Grid item><DatePicker onChange={handleFromDateChange} selected={fromDate} dateFormat="YYYY/MM/DD" /></Grid>
-              <Grid item><DatePicker onChange={handleToDateChange} selected={toDate} dateFormat="YYYY/MM/DD" /></Grid>
+              <Grid item><Typography variant="body1">FROM : </Typography></Grid>
+              <Grid item className={classes.datepicker}><DatePicker onChange={handleFromDateChange} selected={fromDate} dateFormat="YYYY/MM/DD" /></Grid>
+              <Grid item><Typography variant="body1">TO : </Typography></Grid>
+              <Grid item className={classes.datepicker}><DatePicker onChange={handleToDateChange} selected={toDate} dateFormat="YYYY/MM/DD" /></Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6} >
+          <Grid item xs={4} >
             <Grid container alignItems="center" spacing={16} >
               <Grid item><Typography variant="body1">COP </Typography></Grid>
-              <Grid item><Switch checked={copVal} onChange={handleCopChange} /></Grid>
+              <Grid item><Switch checked={cop} onChange={handleCopChange} /></Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12} className={classes.filtersDown}>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <Grid container  alignItems="center" spacing={24}>
               <Grid item><Typography variant="body1">STATUS :</Typography></Grid>
               <Grid item >
-                <StatusSelect statusKey={statusKey} handleStatusChange={handleStatusChange} />
+                <StatusSelect status={status} handleStatusChange={handleStatusChange} />
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Grid container  alignItems="center" spacing={24}>
               <Grid item><Button variant="raised" size="small" className={classes.button} onClick={applyHandler} ><Reorder />APPLY</Button></Grid>
               <Grid item><Button variant="raised" size="small" className={classes.button} onClick={clearHandler} ><Clear />CLEAR</Button></Grid>

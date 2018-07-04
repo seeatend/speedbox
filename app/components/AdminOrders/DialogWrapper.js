@@ -32,7 +32,7 @@ let ChangeStatusContent = (props) => {
   return (
     <Grid container >
       <TextField id="search_val" value={selectedStatusMsg} onChange={handleChange('selectedStatusMsg')} placeholder="Enter some message..." margin="none" className={classes.textField} />
-      <StatusSelect statusKey={selectedStatus} handleStatusChange={handleChange('selectedStatus')} classname={classes.select} />
+      <StatusSelect status={selectedStatus} handleStatusChange={handleChange('selectedStatus')} classname={classes.select} />
     </Grid>
   )
 }

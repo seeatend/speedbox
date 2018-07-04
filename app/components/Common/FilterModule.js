@@ -32,8 +32,8 @@ const styles = theme => ({
 
 let FilterModule = (props) => {
   const { 
-    fromDate,
-    toDate,
+    from_date,
+    to_date,
     handleFromDateChange,
     handleToDateChange,
     cop,
@@ -52,9 +52,9 @@ let FilterModule = (props) => {
           <Grid item xs={8} >
             <Grid container alignItems="center" spacing={24} >
               <Grid item><Typography variant="body1">FROM : </Typography></Grid>
-              <Grid item className={classes.datepicker}><DatePicker onChange={handleFromDateChange} selected={fromDate} dateFormat="YYYY/MM/DD" /></Grid>
+              <Grid item className={classes.datepicker}><DatePicker onChange={handleFromDateChange} selected={from_date} dateFormat="YYYY/MM/DD" /></Grid>
               <Grid item><Typography variant="body1">TO : </Typography></Grid>
-              <Grid item className={classes.datepicker}><DatePicker onChange={handleToDateChange} selected={toDate} dateFormat="YYYY/MM/DD" /></Grid>
+              <Grid item className={classes.datepicker}><DatePicker onChange={handleToDateChange} selected={to_date} dateFormat="YYYY/MM/DD" /></Grid>
             </Grid>
           </Grid>
           <Grid item xs={4} >

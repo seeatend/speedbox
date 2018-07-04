@@ -20,9 +20,9 @@ const styles = theme => ({
 
 let SearchModule = (props) => {
   const { 
-    searchKey,
+    search_key,
     handleSearchKeyChange,
-    searchVal,
+    search_val,
     handleSearchValChange,
     searchHandler,
     classes
@@ -31,7 +31,7 @@ let SearchModule = (props) => {
   return (
     <Grid container alignItems="center">
       <Grid item >
-        <Select value={searchKey} onChange={handleSearchKeyChange} className={classes.select} >
+        <Select value={search_key} onChange={handleSearchKeyChange} className={classes.select} >
           {
             ordersConstant.search.map((s, i) => {
               return <MenuItem value={s.value} key={i}>{s.label}</MenuItem>
@@ -40,7 +40,7 @@ let SearchModule = (props) => {
         </Select>
       </Grid>
       <Grid item >
-        <TextField id="search_val" value={searchVal} onChange={handleSearchValChange} margin="none" className={classes.textField} />
+        <TextField id="search_val" value={search_val} onChange={handleSearchValChange} margin="none" className={classes.textField} />
       </Grid>
       <Grid item ><Search className={classes.searchIcon} onClick={searchHandler} /></Grid>
     </Grid>

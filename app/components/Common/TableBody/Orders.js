@@ -47,7 +47,7 @@ let OrdersTableBody = (props) => {
             role="checkbox"
             aria-checked={isSelected}
             tabIndex={-1}
-            key={n.id || n._id}
+            key={i}
             selected={isselected}
           >
             <TableCell padding="checkbox" className={classes.noTd} onClick={event => handleClick(event, n.orderNumber)}>

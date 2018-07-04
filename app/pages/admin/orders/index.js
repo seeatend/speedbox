@@ -71,7 +71,7 @@ class Orders extends React.Component {
 		const paramsIterator = new URLSearchParams(search);
 		let params = {}
 		for(let key of paramsIterator.keys()) {
-			if(key == "fromDate" || key == "toDate") {
+			if(key == "from_date" || key == "to_date") {
 				params[key] = moment(parseInt(paramsIterator.get(key)))
 			} else if(key == "page") {
 				params[key] = parseInt(paramsIterator.get(key))
@@ -107,26 +107,28 @@ class Orders extends React.Component {
 		});
 	}
 	getOrdersBySearch() {
-		const { searchKey, searchVal, page, rowsPerPage } = this.props.orderState.orders_options;
-		this.props.history.push(`/orders?searchKey=${searchKey}&searchVal=${searchVal}&page=${page}&rowsPerPage=${rowsPerPage}`);
-		this.props.setOrdersOptions({page: 0});
-		this.props.getOrders({ searchKey, searchVal, page: 0, rowsPerPage });
+		const { search_key, search_val, page, rowsPerPage } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?search_key=${search_key}&search_val=${search_val}&page=${page}&rowsPerPage=${rowsPerPage}`);
+		this.props.getOrders({ search_key, search_val, page: 0, rowsPerPage });
+		this.props.setOrdersOptions({search_key: "orderNo", search_val: "", page: 0});
 	}
 	getOrdersByFilters() {
-		const { fromDate, toDate, status, cop, page, rowsPerPage } = this.props.orderState.orders_options;
-		this.props.history.push(`/orders?fromDate=${fromDate}&toDate=${toDate}&status=${status}&cop=${cop}&page=${page}&rows_count=${rowsPerPage}`);
-		this.props.getOrders({ fromDate, toDate, status, cop, page, rowsPerPage });
+		const { from_date, to_date, status, cop, page, rowsPerPage } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?from_date=${from_date}&to_date=${to_date}&status=${status}&cop=${cop}&page=${page}&rows_count=${rowsPerPage}`);
+		this.props.getOrders({ from_date, to_date, status, cop, page, rowsPerPage });
 	}
 	clearFilters() {
-		this.props.setOrdersOptions({ fromDate: moment(), toDate: moment(), status: "placed", cop: false, page: 0 })
-		this.props.history.push(`/orders?fromDate=${fromDate}&toDate=${toDate}&status=${status}&cop=${cop}&page=${page}`);
+		this.props.setOrdersOptions({ from_date: moment(), to_date: moment(), status: "placed", cop: false, page: 0 })
+		const { from_date, to_date, status, cop, page } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?from_date=${from_date}&to_date=${to_date}&status=${status}&cop=${cop}&page=${page}`);
 		this.getOrdersByFilters();
 	}
 	handleChange = name => event => {
     this.props.setOrdersOptions({ [name]: event.target.value });
 	};
 	bulkActionHandler = event => {
-    this.props.setOrdersOptions({ bulk: event.target.value, openDialog: true });
+		this.props.setOrdersOptions({ bulk: event.target.value });
+		this.setState({ openDialog: true })
   };
 	handleDateChange = name => date => {
     this.props.setOrdersOptions({ [name]: date });
@@ -148,7 +150,7 @@ class Orders extends React.Component {
 		this.props.setOrdersOptions({ rowsPerPage: count })
 		this.props.getOrders({
 			...this.props.orderState.orders_options,
-			rowsPerPage: page
+			rowsPerPage: count
 		});
 	}
 	
@@ -161,7 +163,7 @@ class Orders extends React.Component {
 		const { user } = this.props;
 		const { orderState } = this.props;
 		const { orders } = orderState || [];
-		const { searchKey, searchVal, status, fromDate, toDate, cop, bulk, selectedOrders, page, rowsPerPage } = orderState.orders_options;
+		const { search_key, search_val, status, from_date, to_date, cop, bulk, selectedOrders, page, rowsPerPage } = orderState.orders_options;
 		
 		return (
 			<div className="orders-container">
@@ -170,10 +172,10 @@ class Orders extends React.Component {
 					<Grid item xs={2} lg={2}><Typography variant="body1" className={classes.label}>SEARCH BY :</Typography></Grid>
 					<Grid item xs={5} lg={6}>
 						<SearchModule 
-							searchKey={searchKey} 
-							handleSearchKeyChange={this.handleChange('searchKey')} 
-							searchVal={searchVal} 
-							handleSearchValChange={this.handleChange('searchVal')} 
+							search_key={search_key} 
+							handleSearchKeyChange={this.handleChange('search_key')} 
+							search_val={search_val} 
+							handleSearchValChange={this.handleChange('search_val')} 
 							searchHandler={this.getOrdersBySearch}
 						/>
 					</Grid>
@@ -182,11 +184,11 @@ class Orders extends React.Component {
 							<Grid item>
 								<Grid container alignItems="center">
 								<Grid item><Typography variant="body1" className={classes.datelabel}>FROM : </Typography></Grid>
-								<Grid item><DatePicker onChange={this.handleDateChange('fromDate')} selected={fromDate} dateFormat="YYYY/MM/DD" className={classes.extra} /></Grid>
+								<Grid item><DatePicker onChange={this.handleDateChange('from_date')} selected={from_date} dateFormat="YYYY/MM/DD" className={classes.extra} /></Grid>
 								</Grid>
 								<Grid container alignItems="center">
 								<Grid item><Typography variant="body1" className={classes.datelabel}>TO : </Typography></Grid>
-								<Grid item><DatePicker onChange={this.handleDateChange('toDate')} selected={toDate} dateFormat="YYYY/MM/DD" /></Grid>
+								<Grid item><DatePicker onChange={this.handleDateChange('to_date')} selected={to_date} dateFormat="YYYY/MM/DD" /></Grid>
 								</Grid>
 							</Grid>
 							<Grid item>
@@ -197,10 +199,10 @@ class Orders extends React.Component {
 					<Grid item xs={2}><Typography variant="body1" className={classes.label}>FILTERS :</Typography></Grid>
 					<Grid item xs={9} md={9} lg={7} style={{marginTop:'10px'}}>
 						<FilterModule 
-							fromDate={fromDate}
-							toDate={toDate}
-							handleFromDateChange={this.handleDateChange('fromDate')}
-							handleToDateChange={this.handleDateChange('toDate')}
+							from_date={from_date}
+							to_date={to_date}
+							handleFromDateChange={this.handleDateChange('from_date')}
+							handleToDateChange={this.handleDateChange('to_date')}
 							cop={cop}
 							handleCopChange={this.handleCopChange}
 							status={status}

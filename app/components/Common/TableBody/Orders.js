@@ -32,7 +32,7 @@ let OrdersTableBody = (props) => {
   const { 
     data,
     page,
-    rowsPerPage,
+    rows_per_page,
     isSelected,
     handleClick,
     emptyRows,
@@ -41,7 +41,7 @@ let OrdersTableBody = (props) => {
   
   return (
     <TableBody>
-      {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n, i) => {
+      {data.slice(page * rows_per_page, page * rows_per_page + rows_per_page).map((n, i) => {
         const isselected = isSelected(n.orderNumber);
         return (
           <TableRow
@@ -53,7 +53,7 @@ let OrdersTableBody = (props) => {
             selected={isselected}
           >
             <TableCell padding="checkbox" className={classes.noTd} onClick={event => handleClick(event, n.orderNumber)}>
-              <Checkbox checked={isselected} className={classes.checkbox} /> {page*rowsPerPage+i+1}
+              <Checkbox checked={isselected} className={classes.checkbox} /> {page*rows_per_page+i+1}
             </TableCell>
             <TableCell padding="checkbox" className={classes.td}>{n.orderNumber}</TableCell>
             <TableCell padding="checkbox" className={classes.td}>{n._source.name}</TableCell>

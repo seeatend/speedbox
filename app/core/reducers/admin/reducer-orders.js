@@ -15,7 +15,7 @@ const initialState = {
     bulk: "",
     selectedOrders: [],
     page: 0,
-    rowsPerPage: 5
+    rows_per_page: 5
   },
   bulk_data: "",
   ui_error: false,
@@ -29,7 +29,7 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
-
+  
   switch (action.type) {
     case 'ADMIN_GET_ORDERS_PENDING' || 'ADMIN_GET_ORDERS':
       state = {
@@ -40,6 +40,17 @@ export default (state = initialState, action) => {
 
       return state;
       break;
+
+    case 'ADMIN_ORDERS_BULK_PENDING' || 'ADMIN_ORDERS_BULK':
+      state = {
+        ...state,
+        loading: true,
+        loaded: false
+      };
+
+      return state;
+      break;
+
 
     case 'ADMIN_GET_ORDERS_FULFILLED':
       const orders = action.payload.data.map((item, index)=>{
@@ -69,7 +80,9 @@ export default (state = initialState, action) => {
     case 'CLEAN_BULK_DATA':
       state = {
         ...state,
-        bulk_data: ""
+        bulk_data: "",
+        loading: false,
+        loaded: true
       };
 
       return state;

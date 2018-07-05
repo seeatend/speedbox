@@ -84,7 +84,7 @@ class Orders extends React.Component {
 		for(let key of paramsIterator.keys()) {
 			if(key == "from_date" || key == "to_date") {
 				params[key] = moment(parseInt(paramsIterator.get(key)))
-			} else if(key == "page") {
+			} else if(key == "page" || key == "rows_per_page") {
 				params[key] = parseInt(paramsIterator.get(key))
 			} else {
 				params[key] = paramsIterator.get(key);
@@ -118,15 +118,15 @@ class Orders extends React.Component {
 		});
 	}
 	getOrdersBySearch() {
-		const { search_key, search_val, page, rowsPerPage } = this.props.orderState.orders_options;
-		this.props.history.push(`/orders?search_key=${search_key}&search_val=${search_val}&page=${page}&rowsPerPage=${rowsPerPage}`);
-		this.props.getOrders({ search_key, search_val, page: 0, rowsPerPage });
+		const { search_key, search_val, page, rows_per_page } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?search_key=${search_key}&search_val=${search_val}&page=${page}&rows_per_page=${rows_per_page}`);
+		this.props.getOrders({ search_key, search_val, page: 0, rows_per_page });
 		this.props.setOrdersOptions({search_key: "orderNo", search_val: "", page: 0});
 	}
 	getOrdersByFilters() {
-		const { from_date, to_date, status, cop, page, rowsPerPage } = this.props.orderState.orders_options;
-		this.props.history.push(`/orders?from_date=${from_date}&to_date=${to_date}&status=${status}&cop=${cop}&page=${page}&rows_count=${rowsPerPage}`);
-		this.props.getOrders({ from_date, to_date, status, cop, page, rowsPerPage });
+		const { from_date, to_date, status, cop, page, rows_per_page } = this.props.orderState.orders_options;
+		this.props.history.push(`/orders?from_date=${from_date}&to_date=${to_date}&status=${status}&cop=${cop}&page=${page}&rows_per_page=${rows_per_page}`);
+		this.props.getOrders({ from_date, to_date, status, cop, page, rows_per_page });
 	}
 	clearFilters() {
 		this.props.setOrdersOptions({ from_date: moment(), to_date: moment(), status: "placed", cop: false, page: 0 })
@@ -151,6 +151,10 @@ class Orders extends React.Component {
 		this.props.setOrdersOptions({ selectedOrders: orderIds });
 	}
 	handleChangePage = page => {
+		const search = this.props.location.search;
+		const paramsIterator = new URLSearchParams(search);
+		paramsIterator.set('page', page);
+		this.props.history.push(`/orders?${paramsIterator.toString()}`);
 		this.props.setOrdersOptions({ page })
 		this.props.getOrders({
 			...this.props.orderState.orders_options,
@@ -158,10 +162,14 @@ class Orders extends React.Component {
 		});
 	}
 	handleChangeRowsPerPage = count => {
-		this.props.setOrdersOptions({ rowsPerPage: count })
+		const search = this.props.location.search;
+		const paramsIterator = new URLSearchParams(search);
+		paramsIterator.set('rows_per_page', count);
+		this.props.history.push(`/orders?${paramsIterator.toString()}`);
+		this.props.setOrdersOptions({ rows_per_page: count })
 		this.props.getOrders({
 			...this.props.orderState.orders_options,
-			rowsPerPage: count
+			rows_per_page: count
 		});
 	}
 	
@@ -174,7 +182,7 @@ class Orders extends React.Component {
 		const { user } = this.props;
 		const { orderState } = this.props;
 		const { orders } = orderState || [];
-		const { search_key, search_val, status, from_date, to_date, cop, bulk, selectedOrders, page, rowsPerPage } = orderState.orders_options;
+		const { search_key, search_val, status, from_date, to_date, cop, bulk, selectedOrders, page, rows_per_page } = orderState.orders_options;
 		
 		return (
 			<div className="orders-container">
@@ -235,7 +243,7 @@ class Orders extends React.Component {
 								bulkHandler={this.bulkActionHandler} 
 								setSelectedOrders={this.setSelectedOrders}
 								page={page}
-								rowsPerPage={rowsPerPage}
+								rows_per_page={rows_per_page}
 								handleChangePage={this.handleChangePage}
 								handleChangeRowsPerPage={this.handleChangeRowsPerPage}
 							/>

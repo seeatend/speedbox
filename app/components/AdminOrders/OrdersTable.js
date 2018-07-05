@@ -170,9 +170,9 @@ class OrdersTable extends React.Component {
   isSelected = orderNum => this.state.selected.indexOf(orderNum) !== -1;
 
   render() {
-    const { classes, header, bulk, bulkHandler, page, rowsPerPage } = this.props;
+    const { classes, header, bulk, bulkHandler, page, rows_per_page } = this.props;
     const { data, order, orderBy, selected } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const emptyRows = rows_per_page - Math.min(rows_per_page, data.length - page * rows_per_page);
 
     return (
       <Paper className={classes.root}>
@@ -191,7 +191,7 @@ class OrdersTable extends React.Component {
             <OrdersTableBody 
               data={data}
               page={page}
-              rowsPerPage={rowsPerPage}
+              rows_per_page={rows_per_page}
               isSelected={this.isSelected}
               handleClick={this.handleClick}
               emptyRows={emptyRows}
@@ -201,7 +201,7 @@ class OrdersTable extends React.Component {
                 <TablePagination
                   colSpan={6}
                   count={data.length}
-                  rowsPerPage={rowsPerPage}
+                  rowsPerPage={rows_per_page}
                   page={page}
                   backIconButtonProps={{
                     'aria-label': 'Previous Page',

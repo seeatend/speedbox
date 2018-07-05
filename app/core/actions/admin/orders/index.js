@@ -43,8 +43,6 @@ const bulkApiUrls = {
 }
 
 export function ordersBulkActions(bulk, params) {
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-  console.log(params)
   return {
     type: 'ADMIN_ORDERS_BULK',
     payload: new Promise((resolve, reject) => {

@@ -91,3 +91,9 @@ th {
     flex-basis: 100% !important;
   }
 }
+@media screen and (max-width: 600px) {
+  .order-search, .order-download {
+    max-width: 100% !important;
+    flex-basis: 100% !important;
+  }
+}

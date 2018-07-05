@@ -45,21 +45,49 @@ th {
 #order-bulk-dialog-contentText {
 
 }
-@media screen and (max-width: 1200px) {
-  th, td {
-    padding: 0 5px !important;
-    padding-right: 5px !important;
+.order-download {
+  padding-left: 20px;
+}
+@media screen and (max-width: 1075px) {
+  .order-download {
+    padding-left: 0px;
   }
 }
 
-@media screen and (max-width: 1525px) {
-  th, td {
-    padding: 0 3px !important;
-    padding-right: 3px !important;
-  }
-}
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1060px) {
   .Connect-Orders--label-161 {
-    padding-left: 30% !important;
+    padding-left: 10px !important;
+  }
+  .SearchModule-select-254 {
+    width: 120px !important;
+  }
+  .SearchModule-textField-255 {
+    width: 130px !important;
+  }
+  .Connect-Orders--downloadContent-160 {
+    padding-left: 0 !important;
+  }
+  .dwnl-btn {
+    padding: 12px 0 !important;
+  }
+  .dwnl-date {
+    padding: 12px 5px !important;
+  }
+  .filter-apply-btn {
+    padding: 12px 0 !important;
+  }
+  .filter-clear-btn {
+    padding: 12px 10px !important;
+  }
+  .order-label {
+    display: none !important;
+  }
+  .order-search, .order-download {
+    max-width: 50% !important;
+    flex-basis: 50% !important;
+  }
+  .order-filter {
+    max-width: 100% !important;
+    flex-basis: 100% !important;
   }
 }

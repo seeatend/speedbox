@@ -31,11 +31,22 @@ const styles = theme => ({
 		marginBottom: "5px"
 	},
 	downloadContent: {
-		paddingLeft: "20px"
+		[theme.breakpoints.up('lg')]: {
+			paddingLeft: "20px"
+		}
 	},
 	label: {
 		paddingLeft: "45%",
-		paddingTop: "5px"
+		paddingTop: "5px",
+		[theme.breakpoints.down('xs')]: {
+			display: "none"
+		},
+		[theme.breakpoints.down('sm')]: {
+			paddingLeft: 0
+		},
+		[theme.breakpoints.down('mdl')]: {
+			paddingLeft: "10px"
+		}
 	},
 	loader: {
     textAlign: "center"
@@ -169,8 +180,8 @@ class Orders extends React.Component {
 			<div className="orders-container">
 				<Grid container>
 					<Grid item xs={12}><Typography variant="title">VIEW ORDERS</Typography></Grid>
-					<Grid item xs={2} lg={2}><Typography variant="body1" className={classes.label}>SEARCH BY :</Typography></Grid>
-					<Grid item xs={5} lg={6}>
+					<Grid item xs={2} sm={2} lg={2} className="order-label"><Typography variant="body1" className={classes.label}>SEARCH BY :</Typography></Grid>
+					<Grid item xs={12} sm={5} lg={6} className="order-search">
 						<SearchModule 
 							search_key={search_key} 
 							handleSearchKeyChange={this.handleChange('search_key')} 
@@ -179,9 +190,9 @@ class Orders extends React.Component {
 							searchHandler={this.getOrdersBySearch}
 						/>
 					</Grid>
-					<Grid item xs={5} lg={4} className={classes.downloadContent} >
+					<Grid item xs={12} sm={5} lg={4} className="order-download" >
 						<Grid container alignItems="center" spacing={24}>
-							<Grid item>
+							<Grid item className="dwnl-date">
 								<Grid container alignItems="center">
 								<Grid item><Typography variant="body1" className={classes.datelabel}>FROM : </Typography></Grid>
 								<Grid item><DatePicker onChange={this.handleDateChange('from_date')} selected={from_date} dateFormat="YYYY/MM/DD" className={classes.extra} /></Grid>
@@ -191,13 +202,13 @@ class Orders extends React.Component {
 								<Grid item><DatePicker onChange={this.handleDateChange('to_date')} selected={to_date} dateFormat="YYYY/MM/DD" /></Grid>
 								</Grid>
 							</Grid>
-							<Grid item>
+							<Grid item className="dwnl-btn">
 								<DownloadBtn excelData={excelData} />
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item xs={2}><Typography variant="body1" className={classes.label}>FILTERS :</Typography></Grid>
-					<Grid item xs={9} md={9} lg={7} style={{marginTop:'10px'}}>
+					<Grid item xs={2} className="order-label"><Typography variant="body1" className={classes.label}>FILTERS :</Typography></Grid>
+					<Grid item xs={12} sm={9} lg={7} className="order-filter" style={{marginTop:'10px'}}>
 						<FilterModule 
 							from_date={from_date}
 							to_date={to_date}
@@ -212,11 +223,11 @@ class Orders extends React.Component {
 						/>
 					</Grid>
 					{orderState.loading ? (
-						<Grid item xs={6} sm={12} md={12} lg={12}>
+						<Grid item xs={12}>
 							<p className={classes.loader}><img className={classes.drawerImg} src="./images/loader.gif"></img></p>
 						</Grid>
 					) : (
-						<Grid item xs={6} sm={12} md={12} lg={12}>
+						<Grid item xs={12}>
 							<OrdersTable 
 								Orders={orders} 
 								header={'Orders'} 

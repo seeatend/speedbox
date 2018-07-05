@@ -77,8 +77,8 @@ let FilterModule = (props) => {
           </Grid>
           <Grid item xs={4}>
             <Grid container  alignItems="center" spacing={24}>
-              <Grid item><Button variant="raised" size="small" className={classes.button} onClick={applyHandler} ><Reorder />APPLY</Button></Grid>
-              <Grid item><Button variant="raised" size="small" className={classes.button} onClick={clearHandler} ><Clear />CLEAR</Button></Grid>
+              <Grid item className="filter-apply-btn"><Button variant="raised" size="small" className={classes.button} onClick={applyHandler} ><Reorder />APPLY</Button></Grid>
+              <Grid item className="filter-clear-btn"><Button variant="raised" size="small" className={classes.button} onClick={clearHandler} ><Clear />CLEAR</Button></Grid>
             </Grid>
           </Grid>
         </Grid>

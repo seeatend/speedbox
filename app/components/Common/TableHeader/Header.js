@@ -14,7 +14,9 @@ import AdminTableHeader from '../../../constants/Table';
 const headStyles = theme => ({
   th: {
     textAlign: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    padding: '0px',
+    paddingRight: '0px !important'
   },
   checkbox: {
     fontSize: '20px',

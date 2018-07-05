@@ -11,6 +11,8 @@ import { ViewList, ArrowDownward, Check} from 'material-ui-icons';
 const styles = theme => ({
   td: {
     textAlign: 'center',
+    padding: '0px',
+    paddingRight: '0px !important'
   },
   noTd: {
     textAlign: 'center',
